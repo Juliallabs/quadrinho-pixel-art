@@ -1,15 +1,7 @@
- #include "imagens.h"
+#include "imagens.h"
+#include <Adafruit_NeoMatrix.h>
+#include "display_pixel.h"
 
-
-#define PIN 2 // pino do microcontrolador conectado a matriz pixel
-
-#define BRIGHTNESS 255  // Valor máximo de 255, 30 foi escolhido para manter boa visualização no display e gastar menos energia (500mA)
-
-#define mw 8 //define largura da matriz
-#define mh 8 //define altura da matiz
-
-//cria matriz de led 
-Adafruit_NeoMatrix *matrix = new Adafruit_NeoMatrix(mw, mh, PIN,NEO_MATRIX_TOP + NEO_MATRIX_LEFT + NEO_MATRIX_ROWS + NEO_MATRIX_ZIGZAG, NEO_GRB + NEO_KHZ800);
 
 
 void fixdrawRGBBitmap(int16_t x, int16_t y, const uint16_t *bitmap, int16_t w, int16_t h) {
@@ -43,6 +35,10 @@ void display_rgbBitmap(uint8_t bmp_num) {
  // matrix->drawRGBBitmap(0, 0, RGB_bmp[bmp_num], mw, mh);
   matrix->show();
 
+}
+
+void limpa(){
+  display_rgbBitmap(10);
 }
 
 void STARTDisplay() {
