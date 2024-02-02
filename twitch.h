@@ -1,6 +1,7 @@
 #ifndef TWITCH_H
 #define TWITCH_H
 #include <IRCClient.h>
+#include <ESP8266HTTPClient.h>
 #include "senhas.h"
 #include "iot_settings.h"
 #include "display_pixel.h"
@@ -13,8 +14,11 @@ extern int controle;
 extern const String twitchChannelName;
 extern const String twitchInitializationMessage;
 
-
+extern String msg;
 extern IRCClient client;
+extern ESP8266WebServer server;
+extern WiFiClient wiFiClient;
+extern WiFiClientSecure wifiClient;
 extern const String TWITCH_BOT_NAME;
 
 void sendTwitchMessage(String message);

@@ -10,8 +10,9 @@
 #include "iot_settings.h"
 #include "twitch.h"
 #include "imagens.h"
-
-
+#include "webserver.h"
+ESP8266WebServer server(80);
+String msg = "";
 const int PIN = 2; // pino do microcontrolador conectado a matriz pixel
 const int BRIGHTNESS = 120;  // Valor máximo de 255, 30 foi escolhido para manter boa visualização no display e gastar menos energia (500mA)
 
@@ -26,20 +27,18 @@ const String twitchChannelName = "julialabs";
 const String twitchInitializationMessage = "QUADRINHO PIXEL ON";
 const char* HostName = "pixel";
 
-void desenha(int pos) {
-  matrix->clear();
-  display_rgbBitmap(pos);
-  delay(100);
-}
+
 
 void setup() {
   Serial.begin(115200);
   wmConfig(); // funcao descrita no arquivo iot_settings.cpp
   setupOTA(); // funcao descrita no arquivo iot_settings.cpp
+  setupWebServer();
   setupTWconnection();// funcao descrita no arquivo twitch.cpp
   STARTDisplay();// funcao descrita no arquivo display_pixel.cpp
-  display_rgbBitmap(2); // funcao descrita no arquivo display_pixel.cpp
+  desenhar(imagens[0]); // funcao descrita no arquivo display_pixel.cpp
   delay(500);
+  msg="init";
 }
 
 
@@ -47,65 +46,38 @@ void setup() {
 void loop() {
   ArduinoOTA.handle();
   loopTW();
-
-  switch (controle) {
-    case 0: 
-    for (int i = 0 ;i<= 5; i++){
-      desenha(i);
+  loopserver();
+  if(msg=="follow"){
+    for(int i = 0; i<3 ; i++){
+      Serial.print("FOLLOW");
+      desenhar(follow[0]);
+      delay(100);
+      desenhar(follow[1]);
+      delay(100);
+      desenhar(follow[2]);
       delay(100);
     }
-    break;
-    case 1://mouser
+    msg="reset";
 
-      break;
-    //----------------------
-    case 2: //donate
-
-      break;
-    //----------------------
-    case 3: //seguiu o canal
-
-      break;
-    //----------------------
-    case 4: // inscreveu com prime
-
-      break;
-    //----------------------
-    case 5: //foifao
-
-      break;
-      //----------------------
-
-    case 6: // presente anonimo
-
-      break;
-    //----------------------
-    case 7: // PIKACHU
-    desenha(7);
-    delay(5000);
-    controle=0;
-
-      break;
-    //----------------------
-    case 8: //bianca
-    desenha(8);
-    delay(5000);
-    controle=0;
-      break;
-      //----------------------
-    case 9:
-      break;
-      //----------------------
-    case 10:
-
-      break;
-    //----------------------
-    default:
-    for (int i = 0 ;i<= 5; i++){
-      desenha(i);
+    return;}
+ // if(msg=="bits"){ desenhar(..) return;}
+  //if(msg=="prime"){ desenhar(..) return;}
+  //if(msg=="sub"){ desenhar(..) return;}
+  //if(msg=="presente"){ desenhar(..) return;}
+  //if(msg=="raid"){ desenhar(..) return;}
+  //if(msg=="anonimo"){ desenhar(..) return;}
+    if(msg=="") {desenhar(imagens[0]); return;}
+    if(msg=="pituxo") {       
+      desenhar(imagens[1]);
       delay(100);
-    }
-      break;
+      desenhar(imagens[2]);
+      delay(100);
+      desenhar(imagens[3]);
+      delay(100);
+      }
 
-  }
+    
+    
+
+  
 }
